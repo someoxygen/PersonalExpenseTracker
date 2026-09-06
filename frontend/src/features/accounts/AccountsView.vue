@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { onMounted, ref } from "vue";
 import { accountsApi, type AccountInput } from "./accountsApi";
 import type { Account } from "../../types/models";
@@ -63,11 +64,13 @@ async function deactivate() {
 <template>
   <header class="page-heading">
     <div>
-      <p class="eyebrow">VARLIKLARINIZ</p>
-      <h1>Hesaplar</h1>
-      <p class="muted">Banka, nakit ve kart bakiyelerinizi takip edin.</p>
+      <p class="eyebrow">{{ t("VARLIKLARINIZ") }}</p>
+      <h1>{{ t("Hesaplar") }}</h1>
+      <p class="muted">
+        {{ t("Banka, nakit ve kart bakiyelerinizi takip edin.") }}
+      </p>
     </div>
-    <button @click="edit()">+ Hesap ekle</button>
+    <button @click="edit()">{{ t("+ Hesap ekle") }}</button>
   </header>
   <LoadingState v-if="loading" /><ErrorState
     v-else-if="error"
@@ -78,8 +81,8 @@ async function deactivate() {
   <template v-else-if="data"
     ><EmptyState
       v-if="!data.length"
-      title="İlk hesabınızı oluşturun"
-      description="Gelir ve giderleriniz bu hesaplara bağlanacak."
+      :title="t('İlk hesabınızı oluşturun')"
+      :description="t('Gelir ve giderleriniz bu hesaplara bağlanacak.')"
     />
     <div class="grid grid-3">
       <AccountCard
@@ -102,7 +105,7 @@ async function deactivate() {
   />
   <BaseModal
     v-if="open"
-    :title="editing ? 'Hesabı düzenle' : 'Yeni hesap'"
+    :title="editing ? t('Hesabı düzenle') : t('Yeni hesap')"
     :busy="busy"
     @close="open = false"
     ><ErrorState v-if="mutationError" :message="mutationError" /><AccountForm
@@ -114,7 +117,11 @@ async function deactivate() {
   /></BaseModal>
   <ConfirmDialog
     v-if="pending"
-    message="Hesap pasife alınacak. Geçmiş işlemler ve bakiye korunur; yeni işlemler için hesabı tekrar aktifleştirmeniz gerekir."
+    :message="
+      t(
+        'Hesap pasife alınacak. Geçmiş işlemler ve bakiye korunur; yeni işlemler için hesabı tekrar aktifleştirmeniz gerekir.',
+      )
+    "
     :busy="busy"
     :error="mutationError"
     @close="pending = undefined"

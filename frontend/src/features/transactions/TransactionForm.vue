@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { categoryLabel } from "../../i18n/categories";
+import { t } from "../../i18n";
 import { computed, reactive, watch } from "vue";
 import type { Account, Category, TransactionInput } from "../../types/models";
 import { today } from "../../utils/format";
@@ -42,13 +44,15 @@ function submit() {
     <fieldset :disabled="busy" style="border: 0; padding: 0; margin: 0">
       <div class="form-grid">
         <label class="field"
-          >İşlem türü<select v-model="form.type" required>
-            <option value="Expense">Gider</option>
-            <option value="Income">Gelir</option>
+          >{{ t("İşlem türü")
+          }}<select v-model="form.type" required>
+            <option value="Expense">{{ t("Gider") }}</option>
+            <option value="Income">{{ t("Gelir") }}</option>
           </select></label
         >
         <label class="field"
-          >Tutar<input
+          >{{ t("Tutar")
+          }}<input
             v-model.number="form.amount"
             type="number"
             min=".01"
@@ -57,28 +61,31 @@ function submit() {
             required
         /></label>
         <label class="field"
-          >Hesap<select v-model="form.accountId" required>
-            <option value="" disabled>Hesap seçin</option>
+          >{{ t("Hesap")
+          }}<select v-model="form.accountId" required>
+            <option value="" disabled>{{ t("Hesap seçin") }}</option>
             <option
               v-for="a in accounts"
               :key="a.id"
               :value="a.id"
               :disabled="!a.isActive"
             >
-              {{ a.name }}{{ a.isActive ? "" : " (pasif)" }}
+              {{ a.name }}{{ a.isActive ? "" : t(" (pasif)") }}
             </option>
           </select></label
         >
         <label class="field"
-          >Kategori<select v-model="form.categoryId" required>
-            <option value="" disabled>Kategori seçin</option>
+          >{{ t("Kategori")
+          }}<select v-model="form.categoryId" required>
+            <option value="" disabled>{{ t("Kategori seçin") }}</option>
             <option v-for="c in categories" :key="c.id" :value="c.id">
-              {{ c.name }}
+              {{ categoryLabel(c) }}
             </option>
           </select></label
         >
         <label class="field"
-          >İşlem tarihi<input
+          >{{ t("İşlem tarihi")
+          }}<input
             v-model="form.transactionDate"
             type="date"
             min="2000-01-01"
@@ -86,21 +93,27 @@ function submit() {
             required
         /></label>
         <label class="field full"
-          >Açıklama<textarea
+          >{{ t("Açıklama")
+          }}<textarea
             v-model="form.description"
             maxlength="500"
-            placeholder="İşlem hakkında kısa bir not"
+            :placeholder="t('İşlem hakkında kısa bir not')"
           ></textarea>
         </label>
       </div>
       <p class="muted" style="margin-top: 1rem; font-size: 0.85rem">
-        İleri tarihli işlemler, tarihleri geldiğinde bakiye ve raporlara dahil
-        edilir.
+        {{
+          t(
+            "İleri tarihli işlemler, tarihleri geldiğinde bakiye ve raporlara dahil edilir.",
+          )
+        }}
       </p>
       <div class="form-actions">
         <button type="button" class="secondary" @click="$emit('cancel')">
-          Vazgeç</button
-        ><button type="submit">{{ busy ? "Kaydediliyor…" : "Kaydet" }}</button>
+          {{ t("Vazgeç") }}</button
+        ><button type="submit">
+          {{ busy ? t("Kaydediliyor…") : t("Kaydet") }}
+        </button>
       </div>
     </fieldset>
   </form>

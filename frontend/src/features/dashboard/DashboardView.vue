@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { onMounted } from "vue";
 import { RouterLink } from "vue-router";
 import { dashboardApi } from "./dashboardApi";
 import { useResource } from "../../composables/useResource";
 import { useAuthStore } from "../../stores/auth";
-import { financialDate, money } from "../../utils/format";
+import { financialDate, money, percentage } from "../../utils/format";
 import LoadingState from "../../components/LoadingState.vue";
 import ErrorState from "../../components/ErrorState.vue";
 import EmptyState from "../../components/EmptyState.vue";
@@ -29,19 +30,22 @@ onMounted(load);
 <template>
   <header class="page-heading">
     <div>
-      <p class="eyebrow">GENEL BAKIŞ</p>
-      <h1>Merhaba, {{ auth.user?.firstName }}.</h1>
+      <p class="eyebrow">{{ t("GENEL BAKIŞ") }}</p>
+      <h1>{{ t("Merhaba,") }} {{ auth.user?.firstName }}.</h1>
       <p class="muted">
-        Finansal durumunuza bir bakış<span v-if="data">
+        {{ t("Finansal durumunuza bir bakış")
+        }}<span v-if="data">
           · {{ financialDate(data.summary.financialDate) }}</span
         >
       </p>
     </div>
-    <RouterLink class="button" to="/transactions/new">+ İşlem ekle</RouterLink>
+    <RouterLink class="button" to="/transactions/new">{{
+      t("+ İşlem ekle")
+    }}</RouterLink>
   </header>
   <LoadingState
     v-if="loading"
-    label="Finansal özetiniz hazırlanıyor…"
+    :label="t('Finansal özetiniz hazırlanıyor…')"
   /><ErrorState v-else-if="error" :message="error" retry @retry="load" />
   <template v-else-if="data">
     <DashboardSummaryCards :summary="data.summary" />
@@ -61,17 +65,21 @@ onMounted(load);
       />
       <section class="panel">
         <div class="panel-header">
-          <h2>Aylık bütçeler</h2>
-          <RouterLink to="/budgets">Yönet →</RouterLink>
+          <h2>{{ t("Aylık bütçeler") }}</h2>
+          <RouterLink to="/budgets">{{ t("Yönet →") }}</RouterLink>
         </div>
         <p v-if="data.budgets.length" class="muted">
-          {{ money(data.summary.budgetSpent, data.summary.currency) }}
-          kullanıldı · %{{ data.summary.budgetPercentage }}
+          {{
+            t("{amount} kullanıldı · {percentage}", {
+              amount: money(data.summary.budgetSpent, data.summary.currency),
+              percentage: percentage(data.summary.budgetPercentage),
+            })
+          }}
         </p>
         <EmptyState
           v-if="!data.budgets.length"
-          title="Bütçenizi planlayın"
-          description="Kategorilerinize aylık limitler belirleyin."
+          :title="t('Bütçenizi planlayın')"
+          :description="t('Kategorilerinize aylık limitler belirleyin.')"
         />
         <BudgetProgress
           v-for="budget in data.budgets"

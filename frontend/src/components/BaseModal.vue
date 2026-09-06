@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../i18n";
 import { onBeforeUnmount, onMounted, ref, useId } from "vue";
 defineProps<{ title: string; busy?: boolean }>();
 const emit = defineEmits<{ close: [] }>();
@@ -29,7 +30,7 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="icon-button"
-        aria-label="Kapat"
+        :aria-label="t('Kapat')"
         :disabled="busy"
         @click="emit('close')"
       >

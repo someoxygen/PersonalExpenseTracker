@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../i18n";
 defineProps<{
   page: number;
   totalPages: number;
@@ -10,7 +11,7 @@ defineEmits<{ change: [page: number] }>();
 <template>
   <div class="pagination">
     <small
-      >{{ totalCount }} kayıt · Sayfa {{ page }} /
+      >{{ totalCount }} {{ t("kayıt · Sayfa") }} {{ page }} /
       {{ Math.max(1, totalPages) }}</small
     >
     <div class="row-actions">
@@ -19,13 +20,13 @@ defineEmits<{ change: [page: number] }>();
         :disabled="busy || page <= 1"
         @click="$emit('change', page - 1)"
       >
-        Önceki</button
+        {{ t("Önceki") }}</button
       ><button
         class="secondary small"
         :disabled="busy || page >= totalPages"
         @click="$emit('change', page + 1)"
       >
-        Sonraki
+        {{ t("Sonraki") }}
       </button>
     </div>
   </div>

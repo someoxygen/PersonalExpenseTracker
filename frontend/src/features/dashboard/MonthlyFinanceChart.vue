@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { computed } from "vue";
 import type { MonthlyFinance } from "../../types/models";
 import { money, monthName } from "../../utils/format";
@@ -14,24 +15,26 @@ const hasData = computed(() =>
 <template>
   <section class="panel">
     <div class="panel-header">
-      <h2>Gelir ve gider</h2>
-      <span class="muted">Son 6 ay</span>
+      <h2>{{ t("Gelir ve gider") }}</h2>
+      <span class="muted">{{ t("Son 6 ay") }}</span>
     </div>
     <div class="legend">
-      <span><i style="background: #759566"></i>Gelir</span
-      ><span><i style="background: #dbab83"></i>Gider</span>
+      <span><i style="background: #759566"></i>{{ t("Gelir") }}</span
+      ><span><i style="background: #dbab83"></i>{{ t("Gider") }}</span>
     </div>
     <EmptyState
       v-if="!hasData"
-      title="Henüz işlem yok"
-      description="Gelir ve gider eklediğinizde aylık görünümünüz burada oluşacak."
+      :title="t('Henüz işlem yok')"
+      :description="
+        t('Gelir ve gider eklediğinizde aylık görünümünüz burada oluşacak.')
+      "
     />
     <template v-else>
       <svg
         class="chart"
         viewBox="0 0 600 260"
         role="img"
-        aria-label="Son altı ayın gelir ve gider karşılaştırması"
+        :aria-label="t('Son altı ayın gelir ve gider karşılaştırması')"
       >
         <line
           v-for="y in [35, 80, 125, 170, 215]"
@@ -55,7 +58,7 @@ const hasData = computed(() =>
             rx="4"
             fill="#759566"
           >
-            <title>{{ money(item.income, currency) }} gelir</title>
+            <title>{{ money(item.income, currency) }} {{ t("gelir") }}</title>
           </rect>
           <rect
             x="31"
@@ -65,7 +68,7 @@ const hasData = computed(() =>
             rx="4"
             fill="#dbab83"
           >
-            <title>{{ money(item.expense, currency) }} gider</title>
+            <title>{{ money(item.expense, currency) }} {{ t("gider") }}</title>
           </rect>
           <text
             x="27"
@@ -80,13 +83,15 @@ const hasData = computed(() =>
       </svg>
       <table class="sr-only">
         <caption>
-          Aylık gelir ve gider değerleri
+          {{
+            t("Aylık gelir ve gider değerleri")
+          }}
         </caption>
         <thead>
           <tr>
-            <th>Ay</th>
-            <th>Gelir</th>
-            <th>Gider</th>
+            <th>{{ t("Ay") }}</th>
+            <th>{{ t("Gelir") }}</th>
+            <th>{{ t("Gider") }}</th>
           </tr>
         </thead>
         <tbody>

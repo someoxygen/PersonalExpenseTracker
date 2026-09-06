@@ -1,7 +1,15 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { t } from "../i18n";
+import { onMounted, ref } from "vue";
 import { RouterLink, RouterView, useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
+import LanguageSelector from "../components/LanguageSelector.vue";
+import LoadingState from "../components/LoadingState.vue";
+import ErrorState from "../components/ErrorState.vue";
+import { categoriesApi } from "../features/categories/categoriesApi";
+import { useResource } from "../composables/useResource";
+const categories = useResource(categoriesApi.list);
+onMounted(categories.load);
 const auth = useAuthStore();
 const router = useRouter();
 const menuOpen = ref(false);
@@ -28,30 +36,41 @@ function logout() {
         aria-controls="navigation"
         @click="menuOpen = !menuOpen"
       >
-        Menü
+        {{ t("Menü") }}
       </button>
     </header>
     <aside class="sidebar" :class="{ open: menuOpen }">
       <RouterLink to="/dashboard" class="wordmark"
         >Expense Tracker<span>.</span></RouterLink
       >
-      <p class="sidebar-caption">KİŞİSEL FİNANS</p>
-      <nav id="navigation" aria-label="Ana menü">
+      <p class="sidebar-caption">{{ t("KİŞİSEL FİNANS") }}</p>
+      <nav id="navigation" :aria-label="t('Ana menü')">
         <RouterLink
           v-for="link in links"
           :key="link.to"
           :to="link.to"
           @click="menuOpen = false"
           ><span aria-hidden="true">{{ link.icon }}</span
-          >{{ link.label }}</RouterLink
+          >{{ t(link.label) }}</RouterLink
         >
       </nav>
       <div class="sidebar-profile">
+        <LanguageSelector class="desktop-language" />
         <strong>{{ auth.user?.firstName }} {{ auth.user?.lastName }}</strong
-        ><small>{{ auth.user?.currency }} · Kişisel hesap</small
-        ><button class="secondary" @click="logout">Çıkış yap</button>
+        ><small>{{ auth.user?.currency }} {{ t("· Kişisel hesap") }}</small
+        ><button class="secondary" @click="logout">{{ t("Çıkış yap") }}</button>
       </div>
     </aside>
-    <main id="main" class="workspace" tabindex="-1"><RouterView /></main>
+    <main id="main" class="workspace" tabindex="-1">
+      <div class="mobile-language"><LanguageSelector /></div>
+      <LoadingState v-if="categories.loading.value" />
+      <ErrorState
+        v-else-if="categories.error.value"
+        :message="categories.error.value"
+        retry
+        @retry="categories.load"
+      />
+      <RouterView v-else-if="categories.data.value" />
+    </main>
   </div>
 </template>

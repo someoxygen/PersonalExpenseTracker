@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { categoryName } from "../../i18n/categories";
+import { t } from "../../i18n";
 import { computed } from "vue";
 import type { CategoryExpense } from "../../types/models";
-import { money } from "../../utils/format";
+import { money, percentage } from "../../utils/format";
 import EmptyState from "../../components/EmptyState.vue";
 const props = defineProps<{ items: CategoryExpense[]; currency: string }>();
 const segments = computed(() => {
@@ -16,20 +18,20 @@ const segments = computed(() => {
 <template>
   <section class="panel">
     <div class="panel-header">
-      <h2>Harcama dağılımı</h2>
-      <span class="muted">Bu ay</span>
+      <h2>{{ t("Harcama dağılımı") }}</h2>
+      <span class="muted">{{ t("Bu ay") }}</span>
     </div>
     <EmptyState
       v-if="!items.length"
-      title="Henüz gider yok"
-      description="Kategorilere göre harcamalarınız burada görünecek."
+      :title="t('Henüz gider yok')"
+      :description="t('Kategorilere göre harcamalarınız burada görünecek.')"
     />
     <template v-else>
       <svg
         viewBox="0 0 220 190"
         style="max-height: 190px; width: 100%"
         role="img"
-        aria-label="Gider kategorilerinin yüzdeleri"
+        :aria-label="t('Gider kategorilerinin yüzdeleri')"
       >
         <circle
           cx="110"
@@ -53,10 +55,12 @@ const segments = computed(() => {
           :stroke-dashoffset="-item.offset"
           transform="rotate(-90 110 92)"
         >
-          <title>{{ item.categoryName }}: %{{ item.percentage }}</title>
+          <title>
+            {{ categoryName(item) }}: {{ percentage(item.percentage) }}
+          </title>
         </circle>
         <text x="110" y="98" text-anchor="middle" fill="#315942" font-size="15">
-          Bu ay
+          {{ t("Bu ay") }}
         </text>
       </svg>
       <div
@@ -67,9 +71,10 @@ const segments = computed(() => {
       >
         <span
           ><i class="color-dot" :style="{ background: item.color }"></i
-          >{{ item.categoryName }}</span
+          >{{ categoryName(item) }}</span
         ><span
-          >{{ money(item.amount, currency) }} · %{{ item.percentage }}</span
+          >{{ money(item.amount, currency) }} ·
+          {{ percentage(item.percentage) }}</span
         >
       </div>
     </template>

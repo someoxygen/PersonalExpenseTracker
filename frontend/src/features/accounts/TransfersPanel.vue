@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { computed, onMounted, reactive, ref } from "vue";
 import type { Account } from "../../types/models";
 import { transfersApi } from "./transfersApi";
@@ -70,14 +71,17 @@ function changePage(value: number) {
 <template>
   <section class="panel" style="margin-top: 1.5rem">
     <div class="panel-header">
-      <h2>Transfer geçmişi</h2>
+      <h2>{{ t("Transfer geçmişi") }}</h2>
       <button :disabled="active.length < 2" @click="begin">
-        + Transfer yap
+        {{ t("+ Transfer yap") }}
       </button>
     </div>
     <p class="muted">
-      Hesaplar arası hareketler gelir veya gider sayılmaz. Transfer için iki
-      aktif hesap gerekir.
+      {{
+        t(
+          "Hesaplar arası hareketler gelir veya gider sayılmaz. Transfer için iki aktif hesap gerekir.",
+        )
+      }}
     </p>
     <LoadingState v-if="loading" /><ErrorState
       v-else-if="error"
@@ -86,14 +90,14 @@ function changePage(value: number) {
       @retry="load"
     />
     <template v-else-if="data"
-      ><EmptyState v-if="!data.items.length" title="Henüz transfer yok" />
+      ><EmptyState v-if="!data.items.length" :title="t('Henüz transfer yok')" />
       <div v-else class="table-wrap">
         <table class="responsive-table">
           <thead>
             <tr>
-              <th>Kaynak → hedef</th>
-              <th>Tarih</th>
-              <th>Tutar</th>
+              <th>{{ t("Kaynak → hedef") }}</th>
+              <th>{{ t("Tarih") }}</th>
+              <th>{{ t("Tutar") }}</th>
             </tr>
           </thead>
           <tbody>
@@ -102,10 +106,10 @@ function changePage(value: number) {
                 {{ item.sourceAccountName }} → {{ item.targetAccountName
                 }}<br /><small>{{ item.description }}</small>
               </td>
-              <td data-label="Tarih">
+              <td :data-label="t('Tarih')">
                 {{ financialDate(item.transactionDate) }}
               </td>
-              <td data-label="Tutar" class="amount">
+              <td :data-label="t('Tutar')" class="amount">
                 {{ money(item.amount, currency) }}
               </td>
             </tr>
@@ -121,7 +125,7 @@ function changePage(value: number) {
     </template>
     <BaseModal
       v-if="open"
-      title="Hesaplar arası transfer"
+      :title="t('Hesaplar arası transfer')"
       :busy="busy"
       @close="open = false"
       ><ErrorState v-if="saveError" :message="saveError" />
@@ -129,16 +133,18 @@ function changePage(value: number) {
         <fieldset :disabled="busy" style="border: 0; margin: 0; padding: 0">
           <div class="form-grid">
             <label class="field"
-              >Kaynak hesap<select v-model="form.sourceAccountId" required>
-                <option value="" disabled>Seçin</option>
+              >{{ t("Kaynak hesap")
+              }}<select v-model="form.sourceAccountId" required>
+                <option value="" disabled>{{ t("Seçin") }}</option>
                 <option v-for="a in active" :key="a.id" :value="a.id">
                   {{ a.name }}
                 </option>
               </select></label
             >
             <label class="field"
-              >Hedef hesap<select v-model="form.targetAccountId" required>
-                <option value="" disabled>Seçin</option>
+              >{{ t("Hedef hesap")
+              }}<select v-model="form.targetAccountId" required>
+                <option value="" disabled>{{ t("Seçin") }}</option>
                 <option
                   v-for="a in active"
                   :key="a.id"
@@ -150,7 +156,8 @@ function changePage(value: number) {
               </select></label
             >
             <label class="field"
-              >Tutar<input
+              >{{ t("Tutar")
+              }}<input
                 v-model.number="form.amount"
                 type="number"
                 min=".01"
@@ -158,7 +165,8 @@ function changePage(value: number) {
                 required
             /></label>
             <label class="field"
-              >Tarih<input
+              >{{ t("Tarih")
+              }}<input
                 v-model="form.transactionDate"
                 type="date"
                 min="2000-01-01"
@@ -166,17 +174,15 @@ function changePage(value: number) {
                 required
             /></label>
             <label class="field full"
-              >Açıklama<textarea
-                v-model="form.description"
-                maxlength="500"
-              ></textarea>
+              >{{ t("Açıklama")
+              }}<textarea v-model="form.description" maxlength="500"></textarea>
             </label>
           </div>
           <div class="form-actions">
             <button type="button" class="secondary" @click="open = false">
-              Vazgeç</button
+              {{ t("Vazgeç") }}</button
             ><button type="submit">
-              {{ busy ? "İşleniyor…" : "Transferi kaydet" }}
+              {{ busy ? t("İşleniyor…") : t("Transferi kaydet") }}
             </button>
           </div>
         </fieldset>
