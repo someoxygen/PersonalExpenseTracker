@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { onMounted, reactive, ref } from "vue";
 import { RouterLink } from "vue-router";
 import {
@@ -67,11 +68,13 @@ async function remove() {
 <template>
   <header class="page-heading">
     <div>
-      <p class="eyebrow">GELİR VE GİDER</p>
-      <h1>İşlemler</h1>
-      <p class="muted">Hareketlerinizi inceleyin ve yönetin.</p>
+      <p class="eyebrow">{{ t("GELİR VE GİDER") }}</p>
+      <h1>{{ t("İşlemler") }}</h1>
+      <p class="muted">{{ t("Hareketlerinizi inceleyin ve yönetin.") }}</p>
     </div>
-    <RouterLink class="button" to="/transactions/new">+ İşlem ekle</RouterLink>
+    <RouterLink class="button" to="/transactions/new">{{
+      t("+ İşlem ekle")
+    }}</RouterLink>
   </header>
   <ErrorState
     v-if="lookup.error.value"
@@ -95,8 +98,10 @@ async function remove() {
     <template v-else-if="data">
       <EmptyState
         v-if="!data.items.length"
-        title="İşlem bulunamadı"
-        description="Yeni bir işlem ekleyin veya filtrelerinizi değiştirin."
+        :title="t('İşlem bulunamadı')"
+        :description="
+          t('Yeni bir işlem ekleyin veya filtrelerinizi değiştirin.')
+        "
       />
       <TransactionTable
         v-else
@@ -117,7 +122,11 @@ async function remove() {
   </section>
   <ConfirmDialog
     v-if="pendingDelete"
-    message="Bu işlem kalıcı olarak silinecek ve hesabınızın bakiyesi yeniden hesaplanacak."
+    :message="
+      t(
+        'Bu işlem kalıcı olarak silinecek ve hesabınızın bakiyesi yeniden hesaplanacak.',
+      )
+    "
     :busy="deleting"
     :error="deleteError"
     @close="pendingDelete = undefined"

@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { computed, reactive, ref, watch } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import { authApi } from "./authApi";
 import { useAuthStore } from "../../stores/auth";
 import { errorMessage } from "../../utils/errors";
 import ErrorState from "../../components/ErrorState.vue";
+import LanguageSelector from "../../components/LanguageSelector.vue";
 const route = useRoute();
 const router = useRouter();
 const auth = useAuthStore();
@@ -49,11 +51,14 @@ async function submit() {
   <div class="auth-shell">
     <aside class="auth-story">
       <RouterLink to="/" class="wordmark">Expense Tracker.</RouterLink>
-      <p class="eyebrow">PARANIZI TANIYIN</p>
-      <h1>Bugünü görün.<br />Yarını planlayın.</h1>
+      <p class="eyebrow">{{ t("PARANIZI TANIYIN") }}</p>
+      <h1>{{ t("Bugünü görün.") }}<br />{{ t("Yarını planlayın.") }}</h1>
       <p>
-        Gelirinize, harcamalarınıza ve bütçenize tek bir yerden bakın. Küçük
-        adımlarla daha bilinçli kararlar alın.
+        {{
+          t(
+            "Gelirinize, harcamalarınıza ve bütçenize tek bir yerden bakın. Küçük adımlarla daha bilinçli kararlar alın.",
+          )
+        }}
       </p>
       <div class="auth-art" aria-hidden="true">
         <span style="height: 35%"></span><span style="height: 50%"></span
@@ -63,21 +68,25 @@ async function submit() {
     </aside>
     <main id="main" class="auth-content" tabindex="-1">
       <div class="auth-card">
+        <LanguageSelector />
         <h1>
-          {{ registering ? "Yeni bir başlangıç." : "Tekrar hoş geldiniz." }}
+          {{
+            registering ? t("Yeni bir başlangıç.") : t("Tekrar hoş geldiniz.")
+          }}
         </h1>
         <p class="muted">
           {{
             registering
-              ? "Kişisel finans alanınızı oluşturun."
-              : "Hesabınıza giriş yaparak devam edin."
+              ? t("Kişisel finans alanınızı oluşturun.")
+              : t("Hesabınıza giriş yaparak devam edin.")
           }}
         </p>
         <ErrorState v-if="error" :message="error" />
         <form @submit.prevent="submit">
           <div v-if="registering" class="form-grid">
             <label class="field"
-              >Ad<input
+              >{{ t("Ad")
+              }}<input
                 v-model.trim="form.firstName"
                 autocomplete="given-name"
                 required
@@ -85,7 +94,8 @@ async function submit() {
                 :disabled="busy"
             /></label>
             <label class="field"
-              >Soyad<input
+              >{{ t("Soyad")
+              }}<input
                 v-model.trim="form.lastName"
                 autocomplete="family-name"
                 required
@@ -94,7 +104,8 @@ async function submit() {
             /></label>
           </div>
           <label class="field"
-            >E-posta<input
+            >{{ t("E-posta")
+            }}<input
               v-model.trim="form.email"
               type="email"
               autocomplete="email"
@@ -103,7 +114,8 @@ async function submit() {
               :disabled="busy"
           /></label>
           <label class="field"
-            >Parola<input
+            >{{ t("Parola")
+            }}<input
               v-model="form.password"
               type="password"
               :autocomplete="registering ? 'new-password' : 'current-password'"
@@ -112,19 +124,27 @@ async function submit() {
               required
               :disabled="busy"
           /></label>
-          <small v-if="registering">En az 12 karakter kullanın.</small>
+          <small v-if="registering">{{
+            t("En az 12 karakter kullanın.")
+          }}</small>
           <button type="submit" :disabled="busy">
             {{
-              busy ? "İşleniyor…" : registering ? "Hesap oluştur" : "Giriş yap"
+              busy
+                ? t("İşleniyor…")
+                : registering
+                  ? t("Hesap oluştur")
+                  : t("Giriş yap")
             }}
           </button>
         </form>
         <p class="auth-footer">
           {{
-            registering ? "Zaten hesabınız var mı?" : "Henüz hesabınız yok mu?"
+            registering
+              ? t("Zaten hesabınız var mı?")
+              : t("Henüz hesabınız yok mu?")
           }}
           <RouterLink :to="registering ? '/login' : '/register'">{{
-            registering ? "Giriş yapın" : "Hesap oluşturun"
+            registering ? t("Giriş yapın") : t("Hesap oluşturun")
           }}</RouterLink>
         </p>
       </div>

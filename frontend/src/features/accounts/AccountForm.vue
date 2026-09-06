@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { reactive } from "vue";
 import type { AccountInput } from "./accountsApi";
 const props = defineProps<{
@@ -25,39 +26,49 @@ const form = reactive<AccountInput>({
     <fieldset :disabled="busy" style="border: 0; padding: 0; margin: 0">
       <div class="form-grid">
         <label class="field full"
-          >Hesap adı<input v-model.trim="form.name" required maxlength="100"
+          >{{ t("Hesap adı")
+          }}<input v-model.trim="form.name" required maxlength="100"
         /></label>
         <label class="field"
-          >Hesap türü<select v-model="form.type" required>
-            <option value="Cash">Nakit</option>
-            <option value="Bank">Banka</option>
-            <option value="CreditCard">Kredi kartı</option>
-            <option value="Savings">Birikim</option>
-            <option value="Other">Diğer</option>
+          >{{ t("Hesap türü")
+          }}<select v-model="form.type" required>
+            <option value="Cash">{{ t("Nakit") }}</option>
+            <option value="Bank">{{ t("Banka") }}</option>
+            <option value="CreditCard">{{ t("Kredi kartı") }}</option>
+            <option value="Savings">{{ t("Birikim") }}</option>
+            <option value="Other">{{ t("Diğer") }}</option>
           </select></label
         >
         <label class="field"
-          >Başlangıç bakiyesi<input
+          >{{ t("Başlangıç bakiyesi")
+          }}<input
             v-model.number="form.initialBalance"
             type="number"
             step=".01"
             required
         /></label>
         <label class="field"
-          >Para birimi<input :value="form.currency" readonly
+          >{{ t("Para birimi") }}<input :value="form.currency" readonly
         /></label>
         <label class="check"
-          ><input v-model="form.isActive" type="checkbox" />Hesap aktif</label
+          ><input v-model="form.isActive" type="checkbox" />{{
+            t("Hesap aktif")
+          }}</label
         >
       </div>
       <p class="muted" style="margin-top: 1rem">
-        Başlangıç bakiyesi düzenlendiğinde toplam bakiye yeniden hesaplanır.
-        Kredi kartı borcunu negatif başlangıç bakiyesi olarak girebilirsiniz.
+        {{
+          t(
+            "Başlangıç bakiyesi düzenlendiğinde toplam bakiye yeniden hesaplanır. Kredi kartı borcunu negatif başlangıç bakiyesi olarak girebilirsiniz.",
+          )
+        }}
       </p>
       <div class="form-actions">
         <button type="button" class="secondary" @click="$emit('cancel')">
-          Vazgeç</button
-        ><button type="submit">{{ busy ? "Kaydediliyor…" : "Kaydet" }}</button>
+          {{ t("Vazgeç") }}</button
+        ><button type="submit">
+          {{ busy ? t("Kaydediliyor…") : t("Kaydet") }}
+        </button>
       </div>
     </fieldset>
   </form>

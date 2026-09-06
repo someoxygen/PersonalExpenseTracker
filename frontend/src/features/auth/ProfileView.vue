@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { onMounted } from "vue";
 import { authApi } from "./authApi";
 import { useAuthStore } from "../../stores/auth";
@@ -16,8 +17,8 @@ onMounted(load);
 <template>
   <header class="page-heading">
     <div>
-      <p class="eyebrow">HESABINIZ</p>
-      <h1>Profil</h1>
+      <p class="eyebrow">{{ t("HESABINIZ") }}</p>
+      <h1>{{ t("Profil") }}</h1>
     </div>
   </header>
   <LoadingState v-if="loading" /><ErrorState
@@ -29,21 +30,24 @@ onMounted(load);
   <section v-else-if="auth.user" class="panel">
     <dl class="details-list">
       <div>
-        <dt>Ad soyad</dt>
+        <dt>{{ t("Ad soyad") }}</dt>
         <dd>{{ auth.user.firstName }} {{ auth.user.lastName }}</dd>
       </div>
       <div>
-        <dt>E-posta</dt>
+        <dt>{{ t("E-posta") }}</dt>
         <dd>{{ auth.user.email }}</dd>
       </div>
       <div>
-        <dt>Para birimi</dt>
+        <dt>{{ t("Para birimi") }}</dt>
         <dd>{{ auth.user.currency }}</dd>
       </div>
     </dl>
     <p class="notice">
-      Güvenliğiniz için oturumunuz süre sonunda kapanır. Sayfayı yenilediğinizde
-      yeniden giriş yapmanız gerekir.
+      {{
+        t(
+          "Güvenliğiniz için oturumunuz süre sonunda kapanır. Sayfayı yenilediğinizde yeniden giriş yapmanız gerekir.",
+        )
+      }}
     </p>
   </section>
 </template>

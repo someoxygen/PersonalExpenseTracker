@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { computed, ref, watch } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import { accountsApi } from "../accounts/accountsApi";
@@ -55,10 +56,10 @@ async function save(input: TransactionInput) {
 <template>
   <header class="page-heading">
     <div>
-      <p class="eyebrow">İŞLEMLER</p>
-      <h1>{{ id ? "İşlemi düzenle" : "Yeni işlem" }}</h1>
+      <p class="eyebrow">{{ t("İŞLEMLER") }}</p>
+      <h1>{{ id ? t("İşlemi düzenle") : t("Yeni işlem") }}</h1>
     </div>
-    <RouterLink to="/transactions">← İşlemlere dön</RouterLink>
+    <RouterLink to="/transactions">{{ t("← İşlemlere dön") }}</RouterLink>
   </header>
   <section class="panel" style="max-width: 780px">
     <LoadingState v-if="loading" /><ErrorState
@@ -71,11 +72,11 @@ async function save(input: TransactionInput) {
       <ErrorState v-if="saveError" :message="saveError" />
       <EmptyState
         v-if="!data.accounts.some((a) => a.isActive)"
-        title="Önce bir hesap oluşturun"
-        description="İşlem eklemek için aktif bir hesabınız olmalı."
-        ><RouterLink class="button" to="/accounts"
-          >Hesaplara git</RouterLink
-        ></EmptyState
+        :title="t('Önce bir hesap oluşturun')"
+        :description="t('İşlem eklemek için aktif bir hesabınız olmalı.')"
+        ><RouterLink class="button" to="/accounts">{{
+          t("Hesaplara git")
+        }}</RouterLink></EmptyState
       >
       <TransactionForm
         v-else

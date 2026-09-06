@@ -1,11 +1,12 @@
+import { intlLocale } from "../i18n";
 export const money = (value: number, currency = "TRY") =>
-  new Intl.NumberFormat("tr-TR", {
+  new Intl.NumberFormat(intlLocale.value, {
     style: "currency",
     currency,
     maximumFractionDigits: 2,
   }).format(value);
 export const financialDate = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", {
+  new Intl.DateTimeFormat(intlLocale.value, {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -18,6 +19,11 @@ export const today = () =>
     day: "2-digit",
   }).format(new Date());
 export const monthName = (month: number) =>
-  new Intl.DateTimeFormat("tr-TR", { month: "short" }).format(
+  new Intl.DateTimeFormat(intlLocale.value, { month: "short" }).format(
     new Date(2026, month - 1, 1),
   );
+export const percentage = (value: number) =>
+  new Intl.NumberFormat(intlLocale.value, {
+    style: "percent",
+    maximumFractionDigits: 2,
+  }).format(value / 100);

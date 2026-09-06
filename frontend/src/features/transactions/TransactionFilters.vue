@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { categoryLabel } from "../../i18n/categories";
+import { t } from "../../i18n";
 import { computed, reactive } from "vue";
 import type { Account, Category } from "../../types/models";
 import { emptyFilters, type TransactionFiltersModel } from "./transactionsApi";
@@ -21,70 +23,81 @@ function reset() {
   >
     <div class="filters">
       <label class="field"
-        >Ara<input
+        >{{ t("Ara")
+        }}<input
           v-model="form.search"
           type="search"
-          placeholder="Açıklamada ara"
+          :placeholder="t('Açıklamada ara')"
           maxlength="200"
       /></label>
       <label class="field"
-        >Tür<select v-model="form.type" @change="form.categoryId = ''">
-          <option value="">Tümü</option>
-          <option value="Income">Gelir</option>
-          <option value="Expense">Gider</option>
+        >{{ t("Tür")
+        }}<select v-model="form.type" @change="form.categoryId = ''">
+          <option value="">{{ t("Tümü") }}</option>
+          <option value="Income">{{ t("Gelir") }}</option>
+          <option value="Expense">{{ t("Gider") }}</option>
         </select></label
       >
       <label class="field"
-        >Hesap<select v-model="form.accountId">
-          <option value="">Tüm hesaplar</option>
+        >{{ t("Hesap")
+        }}<select v-model="form.accountId">
+          <option value="">{{ t("Tüm hesaplar") }}</option>
           <option v-for="a in accounts" :key="a.id" :value="a.id">
-            {{ a.name }}{{ a.isActive ? "" : " (pasif)" }}
+            {{ a.name }}{{ a.isActive ? "" : t(" (pasif)") }}
           </option>
         </select></label
       >
       <label class="field"
-        >Kategori<select v-model="form.categoryId">
-          <option value="">Tüm kategoriler</option>
+        >{{ t("Kategori")
+        }}<select v-model="form.categoryId">
+          <option value="">{{ t("Tüm kategoriler") }}</option>
           <option v-for="c in categories" :key="c.id" :value="c.id">
-            {{ c.name }}
+            {{ categoryLabel(c) }}
           </option>
         </select></label
       >
       <label class="field"
-        >Başlangıç<input v-model="form.startDate" type="date" /></label
+        >{{ t("Başlangıç")
+        }}<input v-model="form.startDate" type="date" /></label
       ><label class="field"
-        >Bitiş<input v-model="form.endDate" type="date" :min="form.startDate"
+        >{{ t("Bitiş")
+        }}<input v-model="form.endDate" type="date" :min="form.startDate"
       /></label>
       <label class="field"
-        >En az tutar<input
+        >{{ t("En az tutar")
+        }}<input
           v-model="form.minAmount"
           type="number"
           min="0"
           step=".01" /></label
       ><label class="field"
-        >En çok tutar<input
+        >{{ t("En çok tutar")
+        }}<input
           v-model="form.maxAmount"
           type="number"
           :min="form.minAmount || 0"
           step=".01"
       /></label>
       <label class="field"
-        >Sıralama<select v-model="form.sortBy">
-          <option value="transactionDate">İşlem tarihi</option>
-          <option value="amount">Tutar</option>
-          <option value="createdAt">Eklenme tarihi</option>
+        >{{ t("Sıralama")
+        }}<select v-model="form.sortBy">
+          <option value="transactionDate">{{ t("İşlem tarihi") }}</option>
+          <option value="amount">{{ t("Tutar") }}</option>
+          <option value="createdAt">{{ t("Eklenme tarihi") }}</option>
         </select></label
       >
       <label class="field"
-        >Yön<select v-model="form.sortDirection">
-          <option value="desc">Azalan</option>
-          <option value="asc">Artan</option>
+        >{{ t("Yön")
+        }}<select v-model="form.sortDirection">
+          <option value="desc">{{ t("Azalan") }}</option>
+          <option value="asc">{{ t("Artan") }}</option>
         </select></label
       >
     </div>
     <div class="row-actions">
-      <button type="button" class="secondary" @click="reset">Temizle</button
-      ><button type="submit">Filtrele</button>
+      <button type="button" class="secondary" @click="reset">
+        {{ t("Temizle") }}</button
+      ><button type="submit">{{ t("Filtrele") }}</button>
     </div>
   </form>
 </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { categoryLabel } from "../../i18n/categories";
+import { t } from "../../i18n";
 import { computed, onMounted, ref } from "vue";
 import { categoriesApi, type CategoryInput } from "./categoriesApi";
 import type { Category, TransactionType } from "../../types/models";
@@ -71,25 +73,27 @@ async function remove() {
 <template>
   <header class="page-heading">
     <div>
-      <p class="eyebrow">DÜZENLEYİN</p>
-      <h1>Kategoriler</h1>
-      <p class="muted">Gelir ve giderlerinize anlamlı başlıklar verin.</p>
+      <p class="eyebrow">{{ t("DÜZENLEYİN") }}</p>
+      <h1>{{ t("Kategoriler") }}</h1>
+      <p class="muted">
+        {{ t("Gelir ve giderlerinize anlamlı başlıklar verin.") }}
+      </p>
     </div>
-    <button @click="edit()">+ Kategori ekle</button>
+    <button @click="edit()">{{ t("+ Kategori ekle") }}</button>
   </header>
-  <div class="tabs" aria-label="Kategori türü">
+  <div class="tabs" :aria-label="t('Kategori türü')">
     <button
       :class="{ active: type === 'Expense' }"
       :aria-pressed="type === 'Expense'"
       @click="type = 'Expense'"
     >
-      Gider</button
+      {{ t("Gider") }}</button
     ><button
       :class="{ active: type === 'Income' }"
       :aria-pressed="type === 'Income'"
       @click="type = 'Income'"
     >
-      Gelir
+      {{ t("Gelir") }}
     </button>
   </div>
   <LoadingState v-if="loading" /><ErrorState
@@ -99,7 +103,7 @@ async function remove() {
     @retry="load"
   />
   <template v-else
-    ><EmptyState v-if="!visible.length" title="Kategori bulunamadı" />
+    ><EmptyState v-if="!visible.length" :title="t('Kategori bulunamadı')" />
     <div class="grid grid-3">
       <article v-for="category in visible" :key="category.id" class="panel">
         <div class="split">
@@ -108,15 +112,15 @@ async function remove() {
             :style="{ color: category.color }"
             aria-hidden="true"
             >{{ icons[category.icon] ?? "◇" }}</span
-          ><span v-if="category.isSystem" class="tag">Sistem</span>
+          ><span v-if="category.isSystem" class="tag">{{ t("Sistem") }}</span>
         </div>
-        <h2 style="margin-top: 1rem">{{ category.name }}</h2>
-        <small v-if="category.isSystem"
-          >Varsayılan kategori · değiştirilemez</small
-        >
+        <h2 style="margin-top: 1rem">{{ categoryLabel(category) }}</h2>
+        <small v-if="category.isSystem">{{
+          t("Varsayılan kategori · değiştirilemez")
+        }}</small>
         <div v-else class="row-actions">
           <button class="secondary small" @click="edit(category)">
-            Düzenle</button
+            {{ t("Düzenle") }}</button
           ><button
             class="secondary small"
             @click="
@@ -124,7 +128,7 @@ async function remove() {
               mutationError = '';
             "
           >
-            Sil
+            {{ t("Sil") }}
           </button>
         </div>
       </article>
@@ -132,7 +136,7 @@ async function remove() {
   </template>
   <BaseModal
     v-if="open"
-    :title="editing ? 'Kategoriyi düzenle' : 'Yeni kategori'"
+    :title="editing ? t('Kategoriyi düzenle') : t('Yeni kategori')"
     :busy="busy"
     @close="open = false"
     ><ErrorState v-if="mutationError" :message="mutationError" /><CategoryForm
@@ -144,7 +148,9 @@ async function remove() {
   /></BaseModal>
   <ConfirmDialog
     v-if="pending"
-    message="Kategori silinecek. İşlem veya bütçeye bağlı kategoriler silinemez."
+    :message="
+      t('Kategori silinecek. İşlem veya bütçeye bağlı kategoriler silinemez.')
+    "
     :busy="busy"
     :error="mutationError"
     @close="pending = undefined"

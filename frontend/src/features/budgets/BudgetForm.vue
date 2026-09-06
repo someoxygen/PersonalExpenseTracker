@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { categoryLabel } from "../../i18n/categories";
+import { t } from "../../i18n";
 import { computed, reactive } from "vue";
 import type { BudgetInput } from "./budgetsApi";
 import type { Category } from "../../types/models";
@@ -34,15 +36,17 @@ const expenses = computed(() =>
     <fieldset :disabled="busy" style="border: 0; padding: 0; margin: 0">
       <div class="form-grid">
         <label class="field full"
-          >Kategori<select v-model="form.categoryId" required>
-            <option value="" disabled>Gider kategorisi seçin</option>
+          >{{ t("Kategori")
+          }}<select v-model="form.categoryId" required>
+            <option value="" disabled>{{ t("Gider kategorisi seçin") }}</option>
             <option v-for="c in expenses" :key="c.id" :value="c.id">
-              {{ c.name }}
+              {{ categoryLabel(c) }}
             </option>
           </select></label
         >
         <label class="field full"
-          >Bütçe tutarı<input
+          >{{ t("Bütçe tutarı")
+          }}<input
             v-model.number="form.amount"
             type="number"
             step=".01"
@@ -50,14 +54,16 @@ const expenses = computed(() =>
             required
         /></label>
         <label class="field"
-          >Ay<input
+          >{{ t("Ay")
+          }}<input
             v-model.number="form.month"
             type="number"
             min="1"
             max="12"
             required /></label
         ><label class="field"
-          >Yıl<input
+          >{{ t("Yıl")
+          }}<input
             v-model.number="form.year"
             type="number"
             min="2000"
@@ -67,8 +73,10 @@ const expenses = computed(() =>
       </div>
       <div class="form-actions">
         <button type="button" class="secondary" @click="$emit('cancel')">
-          Vazgeç</button
-        ><button type="submit">{{ busy ? "Kaydediliyor…" : "Kaydet" }}</button>
+          {{ t("Vazgeç") }}</button
+        ><button type="submit">
+          {{ busy ? t("Kaydediliyor…") : t("Kaydet") }}
+        </button>
       </div>
     </fieldset>
   </form>

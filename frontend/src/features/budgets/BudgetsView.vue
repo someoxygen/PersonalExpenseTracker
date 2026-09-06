@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from "../../i18n";
 import { computed, onMounted, ref } from "vue";
 import { budgetsApi, type BudgetInput } from "./budgetsApi";
 import { categoriesApi } from "../categories/categoriesApi";
@@ -82,11 +83,11 @@ async function remove() {
 <template>
   <header class="page-heading">
     <div>
-      <p class="eyebrow">PLANLAYIN</p>
-      <h1>Bütçeler</h1>
-      <p class="muted">Aylık hedeflerinizin neresindesiniz?</p>
+      <p class="eyebrow">{{ t("PLANLAYIN") }}</p>
+      <h1>{{ t("Bütçeler") }}</h1>
+      <p class="muted">{{ t("Aylık hedeflerinizin neresindesiniz?") }}</p>
     </div>
-    <button :disabled="!data" @click="edit()">+ Bütçe ekle</button>
+    <button :disabled="!data" @click="edit()">{{ t("+ Bütçe ekle") }}</button>
   </header>
   <form
     class="form-grid"
@@ -94,11 +95,13 @@ async function remove() {
     @submit.prevent="load"
   >
     <label class="field"
-      >Ay<select v-model.number="month" @change="load">
+      >{{ t("Ay")
+      }}<select v-model.number="month" @change="load">
         <option v-for="m in 12" :key="m" :value="m">{{ monthName(m) }}</option>
       </select></label
     ><label class="field"
-      >Yıl<input
+      >{{ t("Yıl")
+      }}<input
         v-model.number="year"
         type="number"
         min="2000"
@@ -116,8 +119,8 @@ async function remove() {
   <template v-else-if="data"
     ><EmptyState
       v-if="!data.budgets.length"
-      title="Bu ay için bütçe yok"
-      description="Gider kategorilerinize bütçe belirleyerek başlayın."
+      :title="t('Bu ay için bütçe yok')"
+      :description="t('Gider kategorilerinize bütçe belirleyerek başlayın.')"
     />
     <div class="grid grid-3">
       <article v-for="budget in data.budgets" :key="budget.id" class="panel">
@@ -126,7 +129,8 @@ async function remove() {
           :currency="auth.user?.currency ?? 'TRY'"
         />
         <div class="row-actions" style="margin-top: 1rem">
-          <button class="secondary small" @click="edit(budget)">Düzenle</button
+          <button class="secondary small" @click="edit(budget)">
+            {{ t("Düzenle") }}</button
           ><button
             class="secondary small"
             @click="
@@ -134,7 +138,7 @@ async function remove() {
               mutationError = '';
             "
           >
-            Sil
+            {{ t("Sil") }}
           </button>
         </div>
       </article>
@@ -142,7 +146,7 @@ async function remove() {
   </template>
   <BaseModal
     v-if="open && data"
-    :title="editing ? 'Bütçeyi düzenle' : 'Yeni bütçe'"
+    :title="editing ? t('Bütçeyi düzenle') : t('Yeni bütçe')"
     :busy="busy"
     @close="open = false"
     ><ErrorState v-if="mutationError" :message="mutationError" /><BudgetForm
@@ -156,7 +160,7 @@ async function remove() {
   /></BaseModal>
   <ConfirmDialog
     v-if="pending"
-    message="Bütçe silinecek. İlgili gelir ve gider kayıtları korunur."
+    :message="t('Bütçe silinecek. İlgili gelir ve gider kayıtları korunur.')"
     :busy="busy"
     :error="mutationError"
     @close="pending = undefined"
