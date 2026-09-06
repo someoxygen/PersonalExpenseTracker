@@ -1,0 +1,9 @@
+@host = http://localhost:5080
+
+GET {{host}}/health/live
+
+### PostgreSQL connectivity (200 Healthy / 503 Unhealthy)
+GET {{host}}/health/ready
+
+### Development only
+GET {{host}}/openapi/v1.json
